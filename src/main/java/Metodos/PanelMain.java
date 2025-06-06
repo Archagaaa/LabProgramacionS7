@@ -67,6 +67,40 @@ public class PanelMain extends javax.swing.JFrame {
         }
     }
     
+    private void comparar() {   
+        if (caraUp && primerc) {
+            if (Im1.getDescription().compareTo(Im2.getDescription()) != 0) {
+                pbtn[0].setEnabled(true);
+                pbtn[1].setEnabled(true);
+            }
+            caraUp = false;
+        }
+    }
+    
+    private void reiniciar() {   
+        btn1.setEnabled(true);
+        btn2.setEnabled(true);
+        btn3.setEnabled(true);
+        btn4.setEnabled(true);
+        btn5.setEnabled(true);
+        btn6.setEnabled(true);
+        btn7.setEnabled(true);
+        btn8.setEnabled(true);
+        btn9.setEnabled(true);
+        btn10.setEnabled(true);
+        btn11.setEnabled(true);
+        btn12.setEnabled(true);
+        btn13.setEnabled(true);
+        btn14.setEnabled(true);
+        btn15.setEnabled(true);
+        btn16.setEnabled(true);
+     
+        primerc = false;
+        caraUp = false;
+
+        setCards();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -112,6 +146,11 @@ public class PanelMain extends javax.swing.JFrame {
         btn1.setMaximumSize(new java.awt.Dimension(60, 60));
         btn1.setMinimumSize(new java.awt.Dimension(60, 60));
         btn1.setPreferredSize(new java.awt.Dimension(60, 60));
+        btn1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn1MouseExited(evt);
+            }
+        });
         btn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn1ActionPerformed(evt);
@@ -259,6 +298,11 @@ public class PanelMain extends javax.swing.JFrame {
         });
 
         jButton17.setText("Reiniciar");
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -423,6 +467,16 @@ public class PanelMain extends javax.swing.JFrame {
         // TODO add your handling code here:
         btnEnabled(btn16);
     }//GEN-LAST:event_btn16ActionPerformed
+
+    private void btn1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn1MouseExited
+        // TODO add your handling code here:
+        comparar();
+    }//GEN-LAST:event_btn1MouseExited
+
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        // TODO add your handling code here:
+        reiniciar()
+    }//GEN-LAST:event_jButton17ActionPerformed
 
     /**
      * @param args the command line arguments
