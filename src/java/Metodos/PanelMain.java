@@ -1,9 +1,5 @@
-package Metodos;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import javax.swing.JPanel;
-import java.util.Random;
+package Metodos;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
