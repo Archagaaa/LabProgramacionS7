@@ -1,26 +1,49 @@
 package Metodos;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import javax.swing.JPanel;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 public class PanelMain extends javax.swing.JFrame {
     
     boolean caraarriba = false;
     private Logica log = new Logica();
-    private boolean caraUp = false;
     private ImageIcon Im1, Im2;
     private JButton[] pbtn = new JButton[2];
     private boolean primerc = false;
+    private int intentos = 0;
+    private int aciertos = 0;
     
     public PanelMain() {
         initComponents();
+        setCards();
     }
 
+    
+    private void bloquearTablero() {
+    JButton[][] botones = {
+        {btn1, btn2, btn3, btn4},
+        {btn5, btn6, btn7, btn8},
+        {btn9, btn10, btn11, btn12},
+        {btn13, btn14, btn15, btn16}
+    };
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            botones[i][j].setEnabled(false);
+        }
+    }
+}
+    
     private void setCards() {      
         int[] numbers = log.getNumCartas();  
         int[][] matriz = arreglobidimensional(numbers);
 
-        //Matriz de los botones
+        
         JButton[][] botones = {
             {btn1, btn2, btn3, btn4},
             {btn5, btn6, btn7, btn8},
@@ -28,20 +51,22 @@ public class PanelMain extends javax.swing.JFrame {
             {btn13, btn14, btn15, btn16}
         };
 
-        //Asigna las imagenes a cada boton de la matriz
+        
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                botones[i][j].setDisabledIcon(new ImageIcon(getClass().getResource("/imagenes/Img" + matriz[i][j] + ".png")));
+                ImageIcon icon = new ImageIcon("src/main/resources" + matriz[i][j] + ".png");
+                icon.setDescription("Img" + matriz[i][j]); 
+                botones[i][j].setDisabledIcon(icon);
             }
         }
     }
     
-    //El metodo convierte el arreglo unidimensional al bidimensional a una matriz 4x4
+    
     private int[][] arreglobidimensional(int[] numbers) {
         int[][] matriz = new int[4][4];
         int indice = 0;
 
-        //Recorre la matriz
+        
         for (int filas = 0; filas < 4; filas++) {
             for (int columnas = 0; columnas < 4; columnas++) {
                 matriz[filas][columnas] = numbers[indice++];
@@ -50,56 +75,52 @@ public class PanelMain extends javax.swing.JFrame {
         return matriz;
     }
     
-    private void btnEnabled(JButton btn) {
+   private void btnEnabled(JButton btn) {
+    if (!caraarriba) {
+        btn.setEnabled(false);
+        Im1 = (ImageIcon) btn.getDisabledIcon();
+        pbtn[0] = btn;
+        caraarriba = true;
+    } else {
+        btn.setEnabled(false);
+        Im2 = (ImageIcon) btn.getDisabledIcon();
+        pbtn[1] = btn;
+        primerc = true;
 
-        if (!caraUp) {                 //si caraUp=fasle no hay cartas seleccionadas
-            btn.setEnabled(false);       //desabilita el boton de la carta de seleccionada
-            Im1 = (ImageIcon) btn.getDisabledIcon();  //guarda la imagen de la carta en una variable
-            pbtn[0] = btn;                 // guarda el boton en variable 
-            caraUp = true;                 // caraUp=true indica la primera carta fue seleccionada
-            primerc = false;              // primero=false indica segunda carta no seleccionada
+       
+        new javax.swing.Timer(2000, e -> {
+            intentos++;
+            labelIntentos.setText("Intentos: " + intentos);
 
-        } else {
-            btn.setEnabled(false);       
-            pbtn[1] = btn;
-            Im2 = (ImageIcon) btn.getDisabledIcon();
-            primerc = true;
-        }
-    }
-    
-    private void comparar() {   
-        if (caraUp && primerc) {
-            if (Im1.getDescription().compareTo(Im2.getDescription()) != 0) {
+            if (Im1.getDescription().equals(Im2.getDescription())) {
+                aciertos++;
+                if (aciertos == 8) {
+                    JOptionPane.showMessageDialog(this, "¡Felicidades! Has encontrado todos los pares.");
+                    bloquearTablero();
+                }
+            } else {
                 pbtn[0].setEnabled(true);
                 pbtn[1].setEnabled(true);
             }
-            caraUp = false;
-        }
-    }
-    
-    private void reiniciar() {   
-        btn1.setEnabled(true);
-        btn2.setEnabled(true);
-        btn3.setEnabled(true);
-        btn4.setEnabled(true);
-        btn5.setEnabled(true);
-        btn6.setEnabled(true);
-        btn7.setEnabled(true);
-        btn8.setEnabled(true);
-        btn9.setEnabled(true);
-        btn10.setEnabled(true);
-        btn11.setEnabled(true);
-        btn12.setEnabled(true);
-        btn13.setEnabled(true);
-        btn14.setEnabled(true);
-        btn15.setEnabled(true);
-        btn16.setEnabled(true);
-     
-        primerc = false;
-        caraUp = false;
 
-        setCards();
+            if (intentos >= 10 && aciertos < 8) {
+                JOptionPane.showMessageDialog(this, "¡Has perdido! Superaste los 10 intentos.");
+                bloquearTablero();
+            }
+
+            // Reset variables
+            caraarriba = false;
+            primerc = false;
+            pbtn[0] = null;
+            pbtn[1] = null;
+
+            ((javax.swing.Timer) e.getSource()).stop();
+        }).start();
     }
+}
+
+    
+ 
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -124,6 +145,7 @@ public class PanelMain extends javax.swing.JFrame {
         btn15 = new javax.swing.JButton();
         btn14 = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
+        labelIntentos = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -304,6 +326,8 @@ public class PanelMain extends javax.swing.JFrame {
             }
         });
 
+        labelIntentos.setText("Intentos: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -348,7 +372,8 @@ public class PanelMain extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(labelIntentos))))))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -356,7 +381,9 @@ public class PanelMain extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(Titulo)
-                .addGap(49, 49, 49)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelIntentos)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -470,12 +497,15 @@ public class PanelMain extends javax.swing.JFrame {
 
     private void btn1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn1MouseExited
         // TODO add your handling code here:
-        comparar();
     }//GEN-LAST:event_btn1MouseExited
 
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+
         // TODO add your handling code here:
-        reiniciar()
+   
+    new PanelMain().setVisible(true);  // Crea nueva ventana limpia
+    this.dispose();     
+       
     }//GEN-LAST:event_jButton17ActionPerformed
 
     /**
@@ -523,5 +553,6 @@ public class PanelMain extends javax.swing.JFrame {
     private javax.swing.JButton btn9;
     private javax.swing.JButton jButton17;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel labelIntentos;
     // End of variables declaration//GEN-END:variables
 }
